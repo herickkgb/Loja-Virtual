@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "830869344550",
+    "project_id": "loja-virtual-d0420",
+    "storage_bucket": "loja-virtual-d0420.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:830869344550:android:f8c2f479a5ad532620f1e7",
+        "android_client_info": {
+          "package_name": "com.herick.lojavirtual"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDw04Zp52LySwCWKhK_M7TjHa2Zs-okVyo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
