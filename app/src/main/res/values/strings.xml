@@ -7,7 +7,11 @@
     <string name="entrar">entrar</string>
     <string name="criar_conta_txt">Não tem uma conta? cadastre-se agora!</string>
     <string name="logo_img_description">Logo Img</string>
-    <string name="nome">Nome</string>
+    <string name="nome">Nome e sobrenome</string>
     <string name="cadastrar">Cadastrar</string>
     <string name="fa_a_seu_cadastro">Faça seu Cadastro</string>
+    <string name="texto_dialog_carregando">Carregando...</string>
+    <string name="menu_item_perfil">Perfil</string>
+    <string name="menu_item_pedidos">Pedidos</string>
+    <string name="menu_item_delogar">Sair da Sessão</string>
 </resources>

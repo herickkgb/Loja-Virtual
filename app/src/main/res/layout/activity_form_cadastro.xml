@@ -1,15 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true">
+    android:fillViewport="true"
+    android:fitsSystemWindows="true"
+    android:scrollbarThumbVertical="@color/dark_blue">
 
-    <LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:context=".activities.FormCadastro.FormCadastro">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/animationView"
@@ -17,8 +18,7 @@
             android:layout_height="200dp"
             app:lottie_autoPlay="true"
             app:lottie_loop="true"
-            app:lottie_rawRes="@raw/register"
-            tools:ignore="MissingClass" />
+            app:lottie_rawRes="@raw/register" />
 
         <TextView
             android:id="@+id/txtTituloCadastro"
@@ -40,11 +40,7 @@
             android:layout_marginTop="20dp"
             android:background="@drawable/background_tela_login"
             android:orientation="vertical"
-            android:padding="10dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
-            tools:ignore="MissingConstraints">
+            android:padding="10dp">
 
             <EditText
                 android:id="@+id/editNome"
@@ -90,7 +86,7 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="10dp"
                 android:layout_marginBottom="10dp"
-                android:backgroundTint="@color/black"
+               android:background="@drawable/bt_entrar_shape"
                 android:padding="15sp"
                 android:text="@string/cadastrar"
                 android:textAllCaps="true"
@@ -101,4 +97,4 @@
 
     </LinearLayout>
 
-</androidx.core.widget.NestedScrollView>
+</ScrollView>

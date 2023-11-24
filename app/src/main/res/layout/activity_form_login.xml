@@ -102,7 +102,7 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="10dp"
                 android:layout_marginBottom="60dp"
-                android:backgroundTint="@color/black"
+                android:background="@drawable/bt_entrar_shape"
                 android:padding="15sp"
                 android:text="@string/entrar"
                 android:textAllCaps="true"
