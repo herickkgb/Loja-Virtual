@@ -5,9 +5,6 @@
     <solid android:color="#3F51B5" />
 
     <!-- Adiciona cantos arredondados apenas nos lados esquerdo e direito -->
-    <corners android:topLeftRadius="0dp"
-        android:topRightRadius="0dp"
-        android:bottomLeftRadius="20dp"
-        android:bottomRightRadius="20dp" />
+    <corners android:radius="20dp" />
 
 </shape>
