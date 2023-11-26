@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.herick.lojavirtual.databinding.ProdutoItemBinding
 import com.herick.lojavirtual.model.Produto
 
@@ -19,9 +20,9 @@ class AdapterProduto(
     }
 
     override fun onBindViewHolder(holder: ProdutoViewHolder, position: Int) {
-        lista_produto.get(position).foto?.let { holder.fotoProduto.setImageResource(it) }
+        Glide.with(context).load(lista_produto.get(position).foto).into(holder.fotoProduto)
         holder.nomeProduto.text = lista_produto[position].nome
-        holder.precoProduto.text = lista_produto[position].preco
+        holder.precoProduto.text = "R$: ${lista_produto[position].preco}"
     }
 
     override fun getItemCount() = lista_produto.size

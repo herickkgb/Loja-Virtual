@@ -1,18 +1,23 @@
-package com.herick.lojavirtual.activities.FormLogin
-
 import android.content.Intent
 import android.graphics.Color
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
+import android.widget.Toast
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.tasks.Task
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.auth
+import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import com.herick.lojavirtual.activities.FormCadastro.FormCadastro
 import com.herick.lojavirtual.activities.dialog.DialogCarregando
 import com.herick.lojavirtual.activities.telaPrincipalDeProdutos.TelaPrincipalDeProdutos
 import com.herick.lojavirtual.databinding.ActivityFormLoginBinding
@@ -21,6 +26,8 @@ class FormLogin : AppCompatActivity() {
     lateinit var binding: ActivityFormLoginBinding
 
     private lateinit var auth: FirebaseAuth
+
+    lateinit var mGoogleSignInClient: GoogleSignInClient
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding: ActivityFormLoginBinding = ActivityFormLoginBinding.inflate(layoutInflater)
@@ -30,12 +37,21 @@ class FormLogin : AppCompatActivity() {
 
         auth = Firebase.auth
 
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken("830869344550-f6mst6bbev5c4t7f134sbktrouuiuef3.apps.googleusercontent.com")
+            .requestEmail()
+            .build()
+
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
+
         window.statusBarColor = Color.BLACK
 
         val dialogCarregando = DialogCarregando(this)
 
-        binding.TxtCadastrese.setOnClickListener {
-            startActivity(Intent(this, FormCadastro::class.java))
+        binding.LinearGoogleLogin.setOnClickListener {
+            Toast.makeText(this, "Login feito com sucesso", Toast.LENGTH_SHORT).show()
+            loginGoogle()
+
         }
 
         binding.btEntrar.setOnClickListener {
@@ -63,7 +79,8 @@ class FormLogin : AppCompatActivity() {
                     }.addOnFailureListener {
 
                         val snackbar =
-                            Snackbar.make( binding.root,
+                            Snackbar.make(
+                                binding.root,
                                 "Erro ao fazer login, verifique email e senha",
                                 Snackbar.LENGTH_SHORT
                             )
@@ -75,6 +92,41 @@ class FormLogin : AppCompatActivity() {
         }
     }
 
+    private fun loginGoogle() {
+        val intent = mGoogleSignInClient.signInIntent
+        abreActivity.launch(intent)
+    }
+
+    var abreActivity = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result: ActivityResult ->
+        if (result.resultCode == RESULT_OK) {
+            val intent = result.data
+            val task = GoogleSignIn.getSignedInAccountFromIntent(intent)
+            try {
+                val conta = task.getResult(ApiException::class.java)
+                loginComGoogle(conta.idToken)
+            } catch (exception: ApiException) {
+
+            }
+        }
+    }
+
+    private fun loginComGoogle(idToken: String?) {
+        val credencial = GoogleAuthProvider.getCredential(idToken, null)
+        auth.signInWithCredential(credencial)
+            .addOnCompleteListener(this) { task: Task<AuthResult> ->
+                if (task.isSuccessful) {
+                    Toast.makeText(this, "Login feito com sucesso", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(this, TelaPrincipalDeProdutos::class.java)
+                    startActivity(intent)
+                    finish()
+                } else {
+                    Toast.makeText(this, "Erro ao fazer login com Google", Toast.LENGTH_SHORT)
+                        .show()
+                }
+            }
+    }
 
     override fun onStart() {
         super.onStart()

@@ -5,6 +5,8 @@ import android.widget.TextView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.toObject
+import com.herick.lojavirtual.adapter.AdapterProduto
 import org.w3c.dom.Text
 
 class DB {
@@ -40,6 +42,21 @@ class DB {
                 }
             }
         }
+    }
+
+    fun obterListaDeProdutos(listaProdutos: MutableList<Produto>, adapter_produto: AdapterProduto) {
+        val db = FirebaseFirestore.getInstance()
+
+        db.collection("Produtos").get()
+            .addOnCompleteListener { tarefa ->
+                if (tarefa.isSuccessful) {
+                    for (documento in tarefa.result!!) {
+                        val produtos = documento.toObject(Produto::class.java)
+                        listaProdutos.add(produtos)
+                        adapter_produto.notifyDataSetChanged()
+                    }
+                }
+            }
     }
 
 }

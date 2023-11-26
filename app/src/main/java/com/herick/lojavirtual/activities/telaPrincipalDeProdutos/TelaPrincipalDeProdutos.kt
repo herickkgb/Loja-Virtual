@@ -18,6 +18,7 @@ import com.herick.lojavirtual.activities.FormLogin.FormLogin
 import com.herick.lojavirtual.activities.dialog.DialogPerfilUsuario
 import com.herick.lojavirtual.adapter.AdapterProduto
 import com.herick.lojavirtual.databinding.ActivityTelaPrincipalDeProdutosBinding
+import com.herick.lojavirtual.model.DB
 import com.herick.lojavirtual.model.Produto
 
 class TelaPrincipalDeProdutos : AppCompatActivity() {
@@ -41,23 +42,11 @@ class TelaPrincipalDeProdutos : AppCompatActivity() {
         val recycler_produtos = binding.recyclerProdutos
         recycler_produtos.layoutManager = GridLayoutManager(this, 2)
         recycler_produtos.setHasFixedSize(true)
-        adapterProduto = AdapterProduto(this,lista_produto)
+        adapterProduto = AdapterProduto(this, lista_produto)
         recycler_produtos.adapter = adapterProduto
-        itensLista()
-    }
 
-    fun itensLista(){
-        val produto1 = Produto(R.drawable.logo,"Sapato de couro","R$:150,00")
-        lista_produto.add(produto1)
-
-        val produto2 = Produto(R.drawable.logo,"Sapato de couro","R$:150,00")
-        lista_produto.add(produto2)
-
-        val produto3 = Produto(R.drawable.logo,"Sapato de couro","R$:150,00")
-        lista_produto.add(produto3)
-
-        val produto4 = Produto(R.drawable.logo,"Sapato de couro","R$:150,00")
-        lista_produto.add(produto4)
+        val db = DB()
+        db.obterListaDeProdutos(lista_produto, adapterProduto)
 
     }
 

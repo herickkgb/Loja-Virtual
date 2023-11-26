@@ -1,93 +1,158 @@
-package com.herick.lojavirtual.activities.FormCadastro
+package com.herick.lojavirtual.activities.FormLogin
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.content.Intent
-import android.view.View
-import android.view.WindowManager
+import android.os.Handler
+import android.os.Looper
+import android.util.Log
 import android.widget.Toast
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.tasks.Task
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.FirebaseNetworkException
+import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseAuthUserCollisionException
-import com.google.firebase.auth.FirebaseAuthWeakPasswordException
-import com.herick.lojavirtual.activities.FormLogin.FormLogin
-import com.herick.lojavirtual.databinding.ActivityFormCadastroBinding
-import com.herick.lojavirtual.model.DB
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
+import com.herick.lojavirtual.R
+import com.herick.lojavirtual.activities.dialog.DialogCarregando
+import com.herick.lojavirtual.activities.telaPrincipalDeProdutos.TelaPrincipalDeProdutos
+import com.herick.lojavirtual.databinding.ActivityFormLoginBinding
 
-class FormCadastro : AppCompatActivity() {
-    private lateinit var binding: ActivityFormCadastroBinding
+class FormLogin : AppCompatActivity() {
+    lateinit var binding: ActivityFormLoginBinding
+
+    private lateinit var auth: FirebaseAuth
+
+
+    lateinit var mGoogleSignInClient: GoogleSignInClient
+    val RC_SIGN_IN: Int = 1
+    lateinit var gso: GoogleSignInOptions
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
-
-        binding = ActivityFormCadastroBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        val binding: ActivityFormLoginBinding = ActivityFormLoginBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
         supportActionBar!!.hide()
 
-        val db = DB()
+        auth = Firebase.auth
 
-        binding.btCadastrar.setOnClickListener {
+        window.statusBarColor = Color.BLACK
+
+        gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken("830869344550-tihcd9jnddu1fmgg2qitcfr2ft36td92.apps.googleusercontent.com")
+            .requestEmail()
+            .build()
+
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
+        val dialogCarregando = DialogCarregando(this)
+
+
+        binding.btEntrar.setOnClickListener {
             val email = binding.editEmail.text.trim().toString()
             val senha = binding.editSenha.text.trim().toString()
-            val nome = binding.editNome.text.toString()
 
-            if (email.isEmpty() || senha.isEmpty() || nome.isEmpty()) {
-                val snackbar =
-                    Snackbar.make(it, "Preencha todos os campos", Snackbar.LENGTH_SHORT)
-                snackbar.setBackgroundTint(Color.RED)
-                snackbar.setTextColor(Color.WHITE)
-                snackbar.show()
+            if (email.isEmpty() || senha.isEmpty()) {
+                Snackbar.make(it, "Preencha todos os campos!", Snackbar.LENGTH_SHORT).apply {
+                    setBackgroundTint(Color.RED)
+                    setTextColor(Color.WHITE)
+                    show()
+                }
             } else {
-
-                FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, senha)
+                FirebaseAuth.getInstance().signInWithEmailAndPassword(email, senha)
                     .addOnCompleteListener(this) { task ->
                         if (task.isSuccessful) {
-                            Toast.makeText(this,"Cadastro feito com sucesso", Toast.LENGTH_SHORT).show()
+                            dialogCarregando.iniciarCarregamentoAlertDialog()
 
-                            val intent = Intent(this, FormLogin::class.java)
-                            startActivity(intent)
-                            finish()
-                        }
+                            Handler(Looper.getMainLooper()).postDelayed({
 
-                        GlobalScope.launch(Dispatchers.IO) {
-                            try {
-                                db.salvarDadosUsuario(nome)
-                            } catch (e: Exception) {
-                                e.printStackTrace()
-                                val snackbar = Snackbar.make(
-                                    it,
-                                    "Erro ao salvar dados do usuário.",
-                                    Snackbar.LENGTH_SHORT
-                                )
-                                snackbar.setBackgroundTint(Color.RED)
-                                snackbar.setTextColor(Color.WHITE)
-                                snackbar.show()
-
-                            }
+                                abrirTelaPrincipal()
+                                dialogCarregando.liberarAlertDialog()
+                            }, 3000)
                         }
-                    }.addOnFailureListener { erroCadastro ->
-                        val mensagemErro = when (erroCadastro) {
-                            is FirebaseAuthWeakPasswordException -> "Digite uma senha com no mínimo 6 caracteres."
-                            is FirebaseAuthUserCollisionException -> "Esta conta já foi cadastrada."
-                            is FirebaseNetworkException -> "Sem conexão com a Internet."
-                            else -> "Erro ao cadastrar usuário, tente novamente mais tarde."
-                        }
+                    }.addOnFailureListener {
 
                         val snackbar =
-                            Snackbar.make(it, mensagemErro, Snackbar.LENGTH_SHORT)
+                            Snackbar.make(
+                                binding.root,
+                                "Erro ao fazer login, verifique email e senha",
+                                Snackbar.LENGTH_SHORT
+                            )
                         snackbar.setBackgroundTint(Color.RED)
                         snackbar.setTextColor(Color.WHITE)
                         snackbar.show()
                     }
             }
         }
+
+        binding.LinearGoogleLogin.setOnClickListener {
+            signIn();
+        }
     }
+
+    private val signInActivityResultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            onActivityResult(RC_SIGN_IN, result.resultCode, result.data)
+        }
+
+    private fun signIn() {
+        val signInIntent = mGoogleSignInClient.signInIntent
+        signInActivityResultLauncher.launch(signInIntent)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == RC_SIGN_IN) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            try {
+                val account = task.getResult(ApiException::class.java)!!
+                firebaseAuthWithGoogle(account)
+            } catch (e: ApiException) {
+                Log.e("Google Sign-In", "Error: ${e.statusCode}")
+                Toast.makeText(this, "Login Failed", Toast.LENGTH_SHORT).show()
+            }
+
+        }
+    }
+
+    private fun firebaseAuthWithGoogle(account: GoogleSignInAccount) {
+        val credential = GoogleAuthProvider.getCredential(account.idToken, null)
+        auth.signInWithCredential(credential)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    val user = auth.currentUser
+                    val intent = Intent(this, TelaPrincipalDeProdutos::class.java)
+                    startActivity(intent)
+                } else {
+                    Toast.makeText(this@FormLogin, "Login Failed: ", Toast.LENGTH_SHORT).show()
+                }
+            }
+    }
+
+
+    override fun onStart() {
+        super.onStart()
+        val currentUser = auth.currentUser
+        if (currentUser != null) {
+            abrirTelaPrincipal()
+        }
+    }
+
+    private fun abrirTelaPrincipal() {
+        val intent = Intent(this, TelaPrincipalDeProdutos::class.java)
+        startActivity(intent)
+        finish()
+    }
+
+
 }
-
-

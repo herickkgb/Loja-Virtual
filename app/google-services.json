@@ -12,7 +12,20 @@
           "package_name": "com.herick.lojavirtual"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "830869344550-f6mst6bbev5c4t7f134sbktrouuiuef3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.herick.lojavirtual",
+            "certificate_hash": "6f13dbee4d514c216e27be7975e6c84f6664462e"
+          }
+        },
+        {
+          "client_id": "830869344550-tihcd9jnddu1fmgg2qitcfr2ft36td92.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDw04Zp52LySwCWKhK_M7TjHa2Zs-okVyo"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "830869344550-tihcd9jnddu1fmgg2qitcfr2ft36td92.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
