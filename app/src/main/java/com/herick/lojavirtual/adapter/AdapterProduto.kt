@@ -1,10 +1,12 @@
 package com.herick.lojavirtual.adapter
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.herick.lojavirtual.activities.detalhesProduto.DetalhesProduto
 import com.herick.lojavirtual.databinding.ProdutoItemBinding
 import com.herick.lojavirtual.model.Produto
 
@@ -20,9 +22,22 @@ class AdapterProduto(
     }
 
     override fun onBindViewHolder(holder: ProdutoViewHolder, position: Int) {
+        val produtoSelecionado = lista_produto[position].foto
         Glide.with(context).load(lista_produto.get(position).foto).into(holder.fotoProduto)
         holder.nomeProduto.text = lista_produto[position].nome
         holder.precoProduto.text = "R$: ${lista_produto[position].preco}"
+
+        holder.itemView.setOnClickListener {
+
+            val intent = Intent(context, DetalhesProduto::class.java)
+
+            intent.putExtra("nomeProduto", holder.nomeProduto.text )
+            intent.putExtra("precoProduto",holder.precoProduto.text)
+            intent.putExtra("fotoProduto",produtoSelecionado)
+
+            context.startActivity(intent)
+
+        }
     }
 
     override fun getItemCount() = lista_produto.size

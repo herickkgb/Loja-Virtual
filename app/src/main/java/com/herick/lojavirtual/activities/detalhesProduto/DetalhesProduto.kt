@@ -1,7 +1,9 @@
 package com.herick.lojavirtual.activities.detalhesProduto
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.bumptech.glide.Glide
 import com.herick.lojavirtual.R
 import com.herick.lojavirtual.databinding.ActivityDetalhesProdutoBinding
 
@@ -11,5 +13,16 @@ class DetalhesProduto : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityDetalhesProdutoBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val intent: Intent = intent
+        binding.btPrecoProduto.text = intent.getStringExtra("precoProduto")
+        binding.dtNomeProduto.text = intent.getStringExtra("nomeProduto")
+
+        val urlImagem: String = intent.getStringExtra("fotoProduto") ?: ""
+
+        Glide.with(this)
+            .load(urlImagem)
+            .into(binding.imgDtFotoProduto)
+
     }
 }

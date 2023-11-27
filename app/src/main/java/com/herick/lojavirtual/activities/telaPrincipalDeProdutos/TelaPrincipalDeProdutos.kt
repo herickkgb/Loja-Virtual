@@ -1,20 +1,21 @@
 package com.herick.lojavirtual.activities.telaPrincipalDeProdutos
 
 import android.content.Intent
-import android.graphics.Color
-import androidx.appcompat.app.ActionBar
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.GridLayout
 import android.widget.Toast
+import androidx.appcompat.app.ActionBar
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
-import com.google.android.material.snackbar.Snackbar
+import com.bumptech.glide.Glide
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.herick.lojavirtual.R
 import com.herick.lojavirtual.activities.FormLogin.FormLogin
+import com.herick.lojavirtual.activities.detalhesProduto.DetalhesProduto
 import com.herick.lojavirtual.activities.dialog.DialogPerfilUsuario
 import com.herick.lojavirtual.adapter.AdapterProduto
 import com.herick.lojavirtual.databinding.ActivityTelaPrincipalDeProdutosBinding
@@ -72,12 +73,27 @@ class TelaPrincipalDeProdutos : AppCompatActivity() {
     }
 
     private fun deslogarUsuario() {
-        auth.signOut()
+        val googleSignInAccount = GoogleSignIn.getLastSignedInAccount(this)
 
-        Toast.makeText(this, "Deslogado com sucesso!", Toast.LENGTH_SHORT).show()
+        if (googleSignInAccount != null) {
+            val googleSignInClient =
+                GoogleSignIn.getClient(this, GoogleSignInOptions.DEFAULT_SIGN_IN)
+            googleSignInClient.signOut().addOnCompleteListener(this) {
+                FirebaseAuth.getInstance().signOut()
+                Toast.makeText(this, "Deslogado com sucesso!", Toast.LENGTH_SHORT).show()
+                val intent = Intent(this, FormLogin::class.java)
+                startActivity(intent)
+                finish()
+            }
+        } else {
+            FirebaseAuth.getInstance().signOut()
+            Toast.makeText(this, "Deslogado com sucesso!", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, FormLogin::class.java)
+            startActivity(intent)
+            finish()
+        }
 
-        val intent = Intent(this, FormLogin::class.java)
-        startActivity(intent)
-        finish()
+        FirebaseAuth.getInstance().signOut()
     }
+
 }

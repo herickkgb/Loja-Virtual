@@ -14,4 +14,7 @@
     <string name="menu_item_perfil">Perfil</string>
     <string name="menu_item_pedidos">Pedidos</string>
     <string name="menu_item_delogar">Sair da Sessão</string>
+    <string name="finalizar_pedido">Finalizar pedido</string>
+    <string name="escolha_o_tamanho">Escolha o tamanho</string>
+    <string name="pre_o">Preço</string>
 </resources>

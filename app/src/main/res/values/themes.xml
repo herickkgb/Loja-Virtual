@@ -1,7 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
-    <style name="Base.Theme.LojaVirtual" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="Theme.LojaVirtual" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your light theme here. -->
         <item name="colorPrimary">@color/dark_blue</item>
         <item name="colorPrimaryVariant">@color/black</item>
@@ -11,6 +11,5 @@
         <item name="displayOptions">showHome|useLogo</item>
     </style>
 
-    <style name="Theme.LojaVirtual" parent="Base.Theme.LojaVirtual" />
 
 </resources>
