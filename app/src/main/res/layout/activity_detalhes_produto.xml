@@ -15,6 +15,7 @@
         android:layout_height="200dp"
         android:adjustViewBounds="true"
         android:cropToPadding="true"
+
         android:scaleType="centerInside"
         android:src="@drawable/img4" />
 
@@ -49,26 +50,31 @@
 
         <RadioButton
             android:layout_width="wrap_content"
+            style="@style/RadioButtonTheme"
             android:layout_height="wrap_content"
-            android:text="38" />
+            android:text="@string/texto_tamanho_38" />
 
         <RadioButton
             android:layout_width="wrap_content"
+            style="@style/RadioButtonTheme"
             android:layout_height="wrap_content"
-            android:text="39" />
+            android:text="@string/texto_tamanho_39" />
 
         <RadioButton
             android:layout_width="wrap_content"
+            style="@style/RadioButtonTheme"
             android:layout_height="wrap_content"
-            android:text="40" />
+            android:text="@string/texto_tamanho_40" />
 
         <RadioButton
             android:layout_width="wrap_content"
+            style="@style/RadioButtonTheme"
             android:layout_height="wrap_content"
             android:text="41" />
 
         <RadioButton
             android:layout_width="wrap_content"
+            style="@style/RadioButtonTheme"
             android:layout_height="wrap_content"
             android:text="42" />
 
@@ -99,7 +105,7 @@
         android:textStyle="bold" />
 
     <Button
-        android:id="@+id/bt_finalizar_pedido"
+        android:id="@+id/btfinalizarPedido"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"

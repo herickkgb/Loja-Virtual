@@ -17,4 +17,8 @@
     <string name="finalizar_pedido">Finalizar pedido</string>
     <string name="escolha_o_tamanho">Escolha o tamanho</string>
     <string name="pre_o">Preço</string>
+    <string name="texto_tamanho_38">38</string>
+    <string name="texto_tamanho_39">39</string>
+    <string name="texto_tamanho_40">40</string>
+    <string name="text_pagamento">Preencha todos os campos antes \nde fazer o pagamento</string>
 </resources>

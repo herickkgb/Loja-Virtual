@@ -11,5 +11,22 @@
         <item name="displayOptions">showHome|useLogo</item>
     </style>
 
+    <!-- Defina o tema do RadioButton -->
+    <style name="RadioButtonTheme" parent="Widget.AppCompat.CompoundButton.RadioButton">
+        <item name="android:textColor">@drawable/radio_text_color</item>
+        <item name="android:background">@drawable/radio_selector</item>
+        <item name="android:button">@android:color/transparent</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_marginEnd">10dp</item>
+        <item name="android:padding">10dp</item>
+    </style>
+
+    <style name="MyProgressBar" parent="Widget.AppCompat.ProgressBar.Horizontal">
+        <item name="android:progressTint">@color/dark_blue</item>
+    </style>
+
+
 
 </resources>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activities.pagamento.FormPagamento">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="40dp"
+        android:gravity="center"
+        android:text="@string/text_pagamento"
+        android:textColor="@color/black"
+        android:textSize="20dp"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/edit_bairro"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:hint=" Bairro"
+        android:maxLines="1" />
+
+    <EditText
+        android:id="@+id/edir_rua_numero"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:hint=" Rua e Número"
+        android:maxLines="2" />
+
+    <EditText
+        android:id="@+id/edit_cidade_estado"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:hint=" Cidade e Estado"
+        android:maxLines="2" />
+
+    <EditText
+        android:id="@+id/edit_celular"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:hint=" Celular"
+        android:inputType="phone"
+        android:maxLength="11"
+        android:maxLines="1" />
+
+    <Button
+        android:id="@+id/btfinalizarPedido"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/bt_sair_perfil_shape"
+        android:text="Fazer Pagamento"
+        android:padding="10dp"
+        android:textAllCaps="true"
+        android:textStyle="bold"
+        android:textColor="@color/white" />
+
+</LinearLayout>
