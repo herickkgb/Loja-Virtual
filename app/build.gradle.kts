@@ -72,6 +72,12 @@ dependencies {
 
     implementation("com.google.android.gms:play-services-auth:20.7.0")
 
-    implementation ("de.hdodenhof:circleimageview:3.1.0")
+    implementation("de.hdodenhof:circleimageview:3.1.0")
+
+    //Mercado PAGO
+   //Dealing with MercadoPago SDK and dependencies
+    implementation ("androidx.browser:browser:1.4.0")
+    implementation ("com.mercadopago.android.px:checkout:4.20.0")
+
 
 }

@@ -49,30 +49,35 @@
         android:orientation="horizontal">
 
         <RadioButton
+            android:id="@+id/tamanho_38"
             android:layout_width="wrap_content"
             style="@style/RadioButtonTheme"
             android:layout_height="wrap_content"
             android:text="@string/texto_tamanho_38" />
 
         <RadioButton
+            android:id="@+id/tamanho_39"
             android:layout_width="wrap_content"
             style="@style/RadioButtonTheme"
             android:layout_height="wrap_content"
             android:text="@string/texto_tamanho_39" />
 
         <RadioButton
+            android:id="@+id/tamanho_40"
             android:layout_width="wrap_content"
             style="@style/RadioButtonTheme"
             android:layout_height="wrap_content"
             android:text="@string/texto_tamanho_40" />
 
         <RadioButton
+            android:id="@+id/tamanho_41"
             android:layout_width="wrap_content"
             style="@style/RadioButtonTheme"
             android:layout_height="wrap_content"
             android:text="41" />
 
         <RadioButton
+            android:id="@+id/tamanho_42"
             android:layout_width="wrap_content"
             style="@style/RadioButtonTheme"
             android:layout_height="wrap_content"
