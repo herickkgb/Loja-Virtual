@@ -59,4 +59,31 @@ class DB {
             }
     }
 
+    fun salvarDadosPedido(
+        endereco: String,
+        celular: String,
+        produto: String,
+        preco: String,
+        tamanho_calcado: String,
+        status_pagamento: String,
+        status_entrega: String
+
+    ) {
+
+        var db = FirebaseFirestore.getInstance()
+        var usuarioID = FirebaseAuth.getInstance().currentUser!!.uid
+
+        val pedidos = hashMapOf(
+            "endereco" to endereco,
+            "celular" to celular,
+            "produto" to produto,
+            "preco" to preco,
+            "tamanho_calcado" to tamanho_calcado,
+            "status_pagamento" to status_pagamento,
+            "status_entrega" to status_entrega
+        )
+
+        val documentReference = db.collection("Usuario_pedidos").document(usuarioID).collection("")
+    }
+
 }

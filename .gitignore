@@ -13,3 +13,5 @@
 .externalNativeBuild
 .cxx
 local.properties
+# Arquivo .gitignore para o caminho fornecido
+/src/main/java/com/herick/lojavirtual/activities/pagamento/Pagamento.java filter=stripPrivateKey
