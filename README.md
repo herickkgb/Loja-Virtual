@@ -1,5 +1,19 @@
 **Boas-Vindas aos Amantes da Moda e Usuários Empolgados!**
 
+# imagem do app
+<div align="center">
+  <img src="app/src/main/res/drawable/imagensApp/imglogin.png?raw=true" width="150">
+  <img src="app/src/main/res/drawable/imagensApp/imgCadastro.png?raw=true" width="150">
+  <img src="app/src/main/res/drawable/imagensApp/imgprincipal.png?raw=true" width="150">
+  <img src="app/src/main/res/drawable/imagensApp/imgDetalhes.png?raw=true" width="150">
+  <img src="app/src/main/res/drawable/imagensApp/imgDetalhesProduto.png?raw=true" width="150">
+  <img src="app/src/main/res/drawable/imagensApp/imgEndereco.png?raw=true" width="150">
+  <img src="app/src/main/res/drawable/imagensApp/imgPagamento.png?raw=true" width="150">
+   <img src="app/src/main/res/drawable/imagensApp/imgPedidosEntrega.png?raw=true" width="150">
+ 
+
+</div>
+
 É com grande entusiasmo que compartilho com vocês o aplicativo de loja virtual de sapatos que desenvolvi como parte do meu aprendizado em programação. Este projeto foi criado com o objetivo de proporcionar a vocês uma experiência de compras única, pensada para atender às suas necessidades de estilo com facilidade e conveniência. Vamos mergulhar nas tecnologias-chave que eu escolhi para impulsionar esta aplicação e garantir uma experiência de usuário excepcional.
 
 **1. Retrofit - Conectando Você ao Mundo da Moda:**
