@@ -96,8 +96,6 @@ public class Pagamento extends AppCompatActivity {
         email.addProperty("email", emailUsuario);
         dados.add("payer", email);
 
-        Log.d("j", dados.toString());
-
         criarPreferenciaPagamento(dados);
     }
 
@@ -145,7 +143,6 @@ public class Pagamento extends AppCompatActivity {
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 123) {
-            Log.d("d", "123");
             if (resultCode == MercadoPagoCheckout.PAYMENT_RESULT_CODE) {
                 final Payment payment = (Payment) data.getSerializableExtra(MercadoPagoCheckout.EXTRA_PAYMENT_RESULT);
                 respostaMercadoPago(payment);
@@ -159,7 +156,7 @@ public class Pagamento extends AppCompatActivity {
                 //Resolve canceled checkout
             }
         } else {
-            Log.d("requestCode", "requestCode: !+ 123");
+            Log.d("requestCode", "requestCode: != 123");
         }
     }
 
