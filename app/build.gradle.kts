@@ -11,7 +11,8 @@ android {
     defaultConfig {
         applicationId = "com.herick.lojavirtual"
         minSdk = 28
-        targetSdk = 33
+        //noinspection ExpiredTargetSdkVersion
+        targetSdk = 30
         versionCode = 1
         versionName = "1.0"
 
@@ -74,9 +75,7 @@ dependencies {
     implementation("de.hdodenhof:circleimageview:3.1.0")
 
     //Mercado PAGO
-    //Dealing with MercadoPago SDK and dependencies
-    implementation("androidx.browser:browser:1.4.0")
-    implementation("com.mercadopago.android.px:checkout:4.20.0")
+    implementation("com.mercadopago.android.px:checkout:4.+")
 
 
 }

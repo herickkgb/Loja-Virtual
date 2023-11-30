@@ -17,6 +17,7 @@ import com.herick.lojavirtual.R
 import com.herick.lojavirtual.activities.FormLogin.FormLogin
 import com.herick.lojavirtual.activities.detalhesProduto.DetalhesProduto
 import com.herick.lojavirtual.activities.dialog.DialogPerfilUsuario
+import com.herick.lojavirtual.activities.pedidos.Pedidos
 import com.herick.lojavirtual.adapter.AdapterProduto
 import com.herick.lojavirtual.databinding.ActivityTelaPrincipalDeProdutosBinding
 import com.herick.lojavirtual.model.DB
@@ -60,10 +61,15 @@ class TelaPrincipalDeProdutos : AppCompatActivity() {
 
         when (item.itemId) {
             R.id.perfil -> abrirDialogPerfilUsuario()
-            R.id.pedidos -> Log.i("erro", "ero")
+            R.id.pedidos -> abrirTelaPedidos()
             R.id.deslogar -> deslogarUsuario()
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun abrirTelaPedidos() {
+        val intent = Intent(this, Pedidos::class.java)
+        startActivity(intent)
     }
 
     private fun abrirDialogPerfilUsuario() {

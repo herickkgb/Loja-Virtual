@@ -6,8 +6,10 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.toObject
+import com.herick.lojavirtual.adapter.AdapterPedido
 import com.herick.lojavirtual.adapter.AdapterProduto
 import org.w3c.dom.Text
+import java.util.UUID
 
 class DB {
     fun salvarDadosUsuario(nome: String) {
@@ -59,7 +61,7 @@ class DB {
             }
     }
 
-    fun salvarDadosPedido(
+    fun salvarDadosPedidoUsuario(
         endereco: String,
         celular: String,
         produto: String,
@@ -72,6 +74,7 @@ class DB {
 
         var db = FirebaseFirestore.getInstance()
         var usuarioID = FirebaseAuth.getInstance().currentUser!!.uid
+        var pedidoID = UUID.randomUUID().toString()
 
         val pedidos = hashMapOf(
             "endereco" to endereco,
@@ -83,7 +86,29 @@ class DB {
             "status_entrega" to status_entrega
         )
 
-        val documentReference = db.collection("Usuario_pedidos").document(usuarioID).collection("")
+        val documentReference = db.collection("Usuario_pedidos")
+            .document(usuarioID)
+            .collection("Pedidos").document(pedidoID)
+
+        documentReference.set(pedidos).addOnSuccessListener {
+            Log.d("db_pedido", "Sucesso ao salvar os pedidos.")
+        }
+    }
+
+    fun obterListaPedidos(lista_pedidos: MutableList<Pedido>, adapterPedido: AdapterPedido) {
+        var db = FirebaseFirestore.getInstance()
+        var usuarioID = FirebaseAuth.getInstance().currentUser!!.uid
+
+        db.collection("Usuario_pedidos").document(usuarioID).collection("Pedidos")
+            .get().addOnCompleteListener { tarefa ->
+                if (tarefa.isSuccessful) {
+                    for (documento in tarefa.result) {
+                        val pedidos = documento.toObject(Pedido::class.java)
+                        lista_pedidos.add(pedidos)
+                        adapterPedido.notifyDataSetChanged()
+                    }
+                }
+            }
     }
 
 }

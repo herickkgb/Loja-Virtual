@@ -5,6 +5,8 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -17,9 +19,11 @@ import com.google.gson.JsonObject;
 import com.herick.lojavirtual.R;
 import com.herick.lojavirtual.databinding.ActivityPagamentoBinding;
 import com.herick.lojavirtual.interfaceMercadoPago.ComunicacaoServidorMP;
+import com.herick.lojavirtual.model.DB;
 import com.mercadopago.android.px.configuration.AdvancedConfiguration;
 import com.mercadopago.android.px.core.MercadoPagoCheckout;
 import com.mercadopago.android.px.model.Payment;
+import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -32,11 +36,12 @@ public class Pagamento extends AppCompatActivity {
     private ActivityPagamentoBinding binding;
 
     private String tamanho_calcado;
+
+    DB db = new DB();
     private String nome;
     private String preco;
-    private final String PUBLIC_KEY = "TEST-c53d0963-1025-4fc4-9d45-4c0bf920ab52";
-    private final String ACCESS_TOKEN = "TEST-5333937517053456-010623-7b1c73c226f567102bf13cd4b2298391-225243913";
-    private static final int REQUEST_CODE = 1;
+    private final String PUBLIC_KEY = "APP_USR-1bd11b96-1239-4c5a-944d-ed4b025e76d1";
+    private final String ACCESS_TOKEN = "APP_USR-5333937517053456-010623-fc19fd0b19ccfa1c583596a9020b59d1-225243913";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +53,9 @@ public class Pagamento extends AppCompatActivity {
         tamanho_calcado = getIntent().getStringExtra("tamanho_calcado");
         nome = getIntent().getStringExtra("nome");
         preco = getIntent().getStringExtra("preco");
+
+        // Remove non-numeric characters from the preco string
+        Double precoDouble = Double.parseDouble(preco.replaceAll("[^\\d.]", ""));
 
         binding.btfinalizarPedido.setOnClickListener(it -> {
             String bairro = binding.editBairro.getText().toString();
@@ -61,13 +69,12 @@ public class Pagamento extends AppCompatActivity {
                 snackbar.setTextColor(getColor(R.color.white));
                 snackbar.show();
             } else {
-                criarJsonObject(celular);
+                criarJsonObject(precoDouble);
             }
         });
-
     }
 
-    private void criarJsonObject(String celular) {
+    private void criarJsonObject(Double precoDouble) {
         JsonObject dados = new JsonObject();
 
         JsonArray item_lista = new JsonArray();
@@ -76,27 +83,20 @@ public class Pagamento extends AppCompatActivity {
         JsonObject email = new JsonObject();
 
         item = new JsonObject();
+
         item.addProperty("title", nome);
         item.addProperty("quantity", 1);
         item.addProperty("currency_id", "BRL");
+        item.addProperty("unit_price", precoDouble);
+        item_lista.add(item);
 
-        String numericPart = preco.replaceAll("[^\\d.]", "");
-
-        try {
-            double precoDouble = Double.parseDouble(numericPart);
-            item.addProperty("unit_price", precoDouble);
-            item_lista.add(item);
-
-        } catch (NumberFormatException e) {
-            Log.e("PrepararDadosPedido", "Erro ao converter 'preco' para double", e);
-        }
         dados.add("items", item_lista);
 
         String emailUsuario = FirebaseAuth.getInstance().getCurrentUser().getEmail();
         email.addProperty("email", emailUsuario);
         dados.add("payer", email);
 
-        Log.d("Teste", dados.toString());
+        Log.d("j", dados.toString());
 
         criarPreferenciaPagamento(dados);
     }
@@ -110,7 +110,7 @@ public class Pagamento extends AppCompatActivity {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(site)
                 .addConverterFactory(ScalarsConverterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
 
         ComunicacaoServidorMP conexao_pagamento = retrofit.create(ComunicacaoServidorMP.class);
@@ -119,14 +119,8 @@ public class Pagamento extends AppCompatActivity {
         request.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                if (response.isSuccessful()) {
-                    String preferenceId = response.body().get("id").getAsString();
-                    startMercadoPagoCheckout(preferenceId); // Inicia o checkout aqui
-                } else {
-                    // Aqui, você pode tratar a resposta de erro de forma apropriada
-                    Log.e("MeuApp", "Erro na criação da preferência de pagamento: " + response.errorBody());
-                    exibirErroPagamento(); // Adicione um método para exibir uma mensagem de erro ao usuário, se necessário
-                }
+                String preferenceId = response.body().get("id").getAsString();
+                criarPagamento(preferenceId); // Inicia o checkout aqui
             }
 
             @Override
@@ -137,57 +131,63 @@ public class Pagamento extends AppCompatActivity {
         });
     }
 
-    private void startMercadoPagoCheckout(final String checkoutPreferenceId) {
+    private void criarPagamento(String preferenceId) {
         final AdvancedConfiguration advancedConfiguration =
                 new AdvancedConfiguration.Builder().setBankDealsEnabled(false).build();
         new MercadoPagoCheckout
-                .Builder(PUBLIC_KEY, checkoutPreferenceId)
+                .Builder(PUBLIC_KEY, preferenceId)
                 .setAdvancedConfiguration(advancedConfiguration).build()
-                .startPayment(this, REQUEST_CODE);
+                .startPayment(this, 123);
+
     }
 
     @Override
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == REQUEST_CODE) {
+        if (requestCode == 123) {
+            Log.d("d", "123");
             if (resultCode == MercadoPagoCheckout.PAYMENT_RESULT_CODE) {
-                final Payment pagamento = (Payment) data.getSerializableExtra(MercadoPagoCheckout.EXTRA_PAYMENT_RESULT);
-                respostaMercadoPago(pagamento);
+                final Payment payment = (Payment) data.getSerializableExtra(MercadoPagoCheckout.EXTRA_PAYMENT_RESULT);
+                respostaMercadoPago(payment);
+                //Done!
             } else if (resultCode == RESULT_CANCELED) {
-                Snackbar snackbar = Snackbar.make(binding.container, "Pagamento Rejeitado", Snackbar.LENGTH_LONG);
+                Snackbar snackbar = Snackbar.make(binding.container, "Pagamento Cancelado", Snackbar.LENGTH_LONG);
                 snackbar.setTextColor(Color.WHITE);
                 snackbar.setBackgroundTint(Color.RED);
                 snackbar.show();
             } else {
-                Log.e("MeuApp", "Resultado desconhecido: " + resultCode);
-                Snackbar snackbar = Snackbar.make(binding.container, "Erro no pagamento", Snackbar.LENGTH_LONG);
-                snackbar.setTextColor(Color.WHITE);
-                snackbar.setBackgroundTint(Color.RED);
-                snackbar.show();
+                //Resolve canceled checkout
             }
         } else {
-            Log.e("MeuApp", "Request code desconhecido: " + requestCode);
+            Log.d("requestCode", "requestCode: !+ 123");
         }
     }
 
     private void respostaMercadoPago(Payment pagamento) {
         String status = pagamento.getPaymentStatus();
+
+        String bairro = binding.editBairro.getText().toString();
+        String ruaNumero = binding.edirRuaNumero.getText().toString();
+        String cidadeEstado = binding.editCidadeEstado.getText().toString();
+        String celular = binding.editCelular.getText().toString();
+
+        String endereco = "Bairro:  " + " " + bairro + " " + " Rua/Número:  " + " " + ruaNumero + " " + " Cidade/Estado: " + " " + cidadeEstado + " ";
+        String status_pagamento = "Status de Pagamento: " + " " + "Pagamento Aprovado";
+        String status_entrega = "Status de Entrega: " + " " + "Em Andamento";
+
+        String nomeProduto = "Nome: " + " " + nome;
+        String precoProduto = "Preço: " + " " + preco;
+        String tamanho = "Tamanho do Calçado: " + " " + tamanho_calcado;
+        String celular_usuario = "Celular: " + " " + celular;
+
         if (status.equalsIgnoreCase("approved")) {
-            Snackbar snackbar = Snackbar.make(binding.container, "Pagamento aprovado!", Snackbar.LENGTH_LONG);
-            snackbar.setBackgroundTint(Color.GREEN);
-            snackbar.setTextColor(Color.WHITE);
-            snackbar.show();
+            Toast.makeText(this, "Pagamento aprovado", Toast.LENGTH_LONG).show();
+
+            db.salvarDadosPedidoUsuario(endereco, celular_usuario, nomeProduto, precoProduto, tamanho, status_pagamento, status_entrega);
         } else if (status.equalsIgnoreCase("rejected")) {
-            Snackbar snackbar = Snackbar.make(binding.container, "Pagamento rejeitado", Snackbar.LENGTH_LONG);
-            snackbar.setTextColor(Color.WHITE);
-            snackbar.setBackgroundTint(Color.RED);
-            snackbar.show();
-        }else {
-            Snackbar snackbar = Snackbar.make(binding.container, status.toString(), Snackbar.LENGTH_LONG);
-            snackbar.setTextColor(Color.WHITE);
-            snackbar.setBackgroundTint(Color.RED);
-            snackbar.show();
+            Toast.makeText(this, "Pagamento rejeitado", Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(this, "Pagamento outro erro", Toast.LENGTH_LONG).show();
         }
     }
 
